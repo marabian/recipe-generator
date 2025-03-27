@@ -2,6 +2,10 @@
 
 A Streamlit web application that allows users to generate recipes based on ingredients using Gemini's interleaved text and image generation capabilities.
 
+## Live Demo
+
+[https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/](https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/)
+
 ## Features
 
 ### Implemented Features
