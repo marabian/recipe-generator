@@ -54,6 +54,7 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
 - Use browser's local storage to save recipes instead of Streamlit's session_state so that the recipes persist across sessions.
 
+- Place "Save to Collection" on the top instead of bottom of the generated recipe card.
 
 ## Architecture
 
