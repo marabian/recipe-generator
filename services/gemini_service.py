@@ -46,6 +46,7 @@ def generate_recipe(
         client = initialize_gemini(api_key)
 
         # Build the complete prompt
+        # Note: Developer/system instruction is not enabled for models/gemini-2.0-flash-exp-image-generation
         complete_prompt = f"{RECIPE_SYSTEM_PROMPT}\n\n{prompt}\n\n"
 
         if ingredients:
