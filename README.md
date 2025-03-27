@@ -52,6 +52,8 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
    This will eliminate the messy JSON output parsing logic and will help make the code cleaner + much simpler/robust.
 
+- Use browser's local storage to save recipes instead of Streamlit's session_state so that the recipes persist across sessions.
+
 
 ## Architecture
 
