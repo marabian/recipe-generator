@@ -5,8 +5,13 @@ from PIL import Image
 from services.gemini_service import save_image_to_temp
 
 
-def display_recipe(recipe_data):
-    """Display a recipe with title, ingredients, and steps with images."""
+def display_recipe(recipe_data, check_availability=False):
+    """Display a recipe with title, ingredients, and steps with images.
+
+    Args:
+        recipe_data: Dictionary containing recipe information
+        check_availability: Whether to check ingredient availability against user's pantry
+    """
     recipe = recipe_data["recipe"]
 
     # Display recipe title and info
@@ -24,8 +29,26 @@ def display_recipe(recipe_data):
 
     # Display ingredients
     st.markdown("### Ingredients")
-    for ingredient in recipe["ingredients"]:
-        st.markdown(f"- {ingredient}")
+
+    # Check if we should display categorized ingredients
+    if check_availability and recipe_data.get("availability_results"):
+        availability_results = recipe_data["availability_results"]
+
+        # Show available ingredients in green
+        if availability_results.get("available"):
+            st.markdown("#### Available in your pantry:")
+            for ingredient in availability_results["available"]:
+                st.markdown(f"- <span style='color:green'>{ingredient}</span>", unsafe_allow_html=True)
+
+        # Show unavailable ingredients in red
+        if availability_results.get("unavailable"):
+            st.markdown("#### Need to buy:")
+            for ingredient in availability_results["unavailable"]:
+                st.markdown(f"- <span style='color:red'>{ingredient}</span>", unsafe_allow_html=True)
+    else:
+        # Display ingredients normally if not checking availability
+        for ingredient in recipe["ingredients"]:
+            st.markdown(f"- {ingredient}")
 
     # Display steps with images
     st.markdown("### Instructions")

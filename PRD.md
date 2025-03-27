@@ -7,7 +7,7 @@ This is a Streamlit web application that allows users to generate recipes based 
 
 # High-level architecture
 
-Streamlit app with the following pages:
+Streamlit app with the following tabs:
 
 - Recipe Generator
 - Recipe Collection

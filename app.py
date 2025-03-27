@@ -15,7 +15,7 @@ except ImportError:
 
 # Import services and utilities
 try:
-    from services.gemini_service import generate_recipe
+    from services.gemini_service import generate_recipe, check_ingredient_availability
     from utils.display_functions import display_recipe
 except ImportError as e:
     print(f"Error importing modules: {e}")
@@ -39,19 +39,24 @@ def show_recipe_generator():
         )
 
         # Create columns with better spacing for buttons
-        left_col, right_col = st.columns([1, 1])
+        left_col, right_col = st.columns([7.3, 1])
 
         with left_col:
             # Primary button for generating recipe
-            generate_button = st.form_submit_button("Generate Recipe", type="primary")
+            generate_button = st.form_submit_button("🧑‍🍳 Generate Recipe", type="primary")
 
         with right_col:
-            # Container for right-aligned buttons
-            col1, col2, col3 = st.columns([1.9, 1, 1])
-            with col2:
-                clear_button = st.form_submit_button("Clear")
-            with col3:
-                regenerate_button = st.form_submit_button("Regenerate")
+            # Container for right-aligned clear button
+            _, clear_col = st.columns([0.1, 0.9])
+            with clear_col:
+                clear_button = st.form_submit_button("🔄 Clear")
+
+        # Option to check ingredients availability
+        st.session_state.check_ingredients = st.checkbox(
+            "Check ingredients against my pantry",
+            value=st.session_state.check_ingredients,
+            help="Compare recipe ingredients with your saved ingredients",
+        )
 
     # Check for API key
     if not st.session_state.api_key:
@@ -64,7 +69,7 @@ def show_recipe_generator():
         st.rerun()
 
     # Store generated recipe or regenerate
-    if generate_button or regenerate_button:
+    if generate_button:
         if not prompt and not st.session_state.ingredients:
             st.warning("Please enter a prompt or add ingredients in the Ingredients & Preferences page.")
             return
@@ -80,12 +85,26 @@ def show_recipe_generator():
             )
 
             if recipe:
+                # Check ingredient availability once during generation
+                availability_results = None
+                if st.session_state.check_ingredients:
+                    recipe_ingredients = recipe.model_dump()["ingredients"]
+                    if not st.session_state.ingredients:
+                        # If user has no ingredients, everything is unavailable
+                        availability_results = {"available": [], "unavailable": recipe_ingredients}
+                    else:
+                        # Only call Gemini if user has ingredients to check against
+                        availability_results = check_ingredient_availability(
+                            recipe_ingredients, st.session_state.ingredients, st.session_state.api_key
+                        )
+
                 # Store the recipe in session state
                 st.session_state.last_recipe = {
                     "id": str(uuid.uuid4()),
                     "prompt": prompt,
                     "recipe": recipe.model_dump(),
                     "generated_at": time.time(),
+                    "availability_results": availability_results,
                 }
 
                 # Show success message
@@ -95,7 +114,7 @@ def show_recipe_generator():
 
     # Display the generated recipe
     if hasattr(st.session_state, "last_recipe") and st.session_state.last_recipe:
-        display_recipe(st.session_state.last_recipe)
+        display_recipe(st.session_state.last_recipe, check_availability=st.session_state.check_ingredients)
 
         # Save button
         if st.button("Save to Collection"):
@@ -147,7 +166,7 @@ def show_recipe_collection():
             st.write(recipe_data["prompt"])
 
             # Display the recipe
-            display_recipe(recipe_data)
+            display_recipe(recipe_data, check_availability=False)
 
             # Delete button
             if st.button("Delete Recipe", key=f"delete_{recipe_data['id']}"):
@@ -162,7 +181,7 @@ def show_ingredients_preferences():
 
     # Ingredients section
     st.header("Ingredients")
-    st.write("Add ingredients that you'd like to use in your recipes.")
+    st.write("Add ingredients from your pantry that you'd like to use in your recipes.")
 
     # Add ingredients form
     with st.form("add_ingredient_form"):
@@ -204,7 +223,7 @@ def show_ingredients_preferences():
             st.success("All ingredients cleared!")
             st.rerun()
     else:
-        st.info("Your ingredients list is empty. Add ingredients above.")
+        st.info("Your ingredients list is empty. Add ingredients from pantry above.")
 
     # Preferences section
     st.markdown("---")
@@ -289,6 +308,9 @@ def main():
 
     if "api_key" not in st.session_state:
         st.session_state.api_key = os.getenv("GEMINI_API_KEY", "")
+
+    if "check_ingredients" not in st.session_state:
+        st.session_state.check_ingredients = False
 
     # Sidebar for navigation and API key
     with st.sidebar:

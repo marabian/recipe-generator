@@ -5,25 +5,50 @@ A Streamlit web application that allows users to generate recipes based on ingre
 ## Features
 
 ### Implemented Features
-- [x] **Recipe Generation**: Generate detailed recipes with step-by-step instructions and images
-- [x] **Structured Output**: Uses Pydantic for structured recipe data modeling and validation
-- [x] **Interleaved Content**: Seamless integration of text instructions with corresponding images
+
+
+- [x] **Recipe Generation**: Generate detailed recipes with step-by-step instructions using interleaved text and images.
 - [x] **Recipe Collection**: Save and manage your favorite recipes
 - [x] **Ingredients Management**: Add, remove, and clear ingredients to be used in recipes
 - [x] **Preference Settings**: Set culinary preferences and dietary restrictions
 - [x] **Customizable Units**: Toggle between metric and imperial measurement units
 - [x] **Streamlined UI**: Intuitive interface with responsive design and primary/secondary button hierarchy
+- [x] **Pantry Awareness Option**: Highlight ingredients you already have in your pantry (green) versus those you need (red). Uses Gemini's function calling capabilities to categorize ingredients.
 
 ### Planned Features
-- [ ] **Pantry Awareness**: Highlight ingredients you already have in your pantry (green) versus those you need (red)
+
+
 - [ ] **Nutritional Analysis**: Calculate and display nutritional information for each recipe with visual charts
 - [ ] **Consumption Tracking**: Optional feature to track nutritional intake based on recipes you've made
-- [ ] **Dark/Light Theme**: Customizable appearance settings
 
-### Things to Fix
+### Notes & Potential Improvements
 
-- [ ] Use structured outputs with Pydantic native with Gemini
-- [ ] Make sure the old recipe refreshes when new recipe is being generated
+- **System instruction**: Currently, Developer/system instruction is not enabled for `models/gemini-2.0-flash-exp-image-generation`. When enabled, we can pass system instruction like this:
+
+   ```python
+   response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    config=types.GenerateContentConfig(
+        system_instruction=sys_instruct),
+    contents=["Who are you?"]
+   )
+   ```
+
+- **JSON Mode**: JSON mode is not enabled for `models/gemini-2.0-flash-exp-image-generation`. When enabled, we can pass Pydantic schema to the model like this:
+
+   ```python
+    generate_content_config = types.GenerateContentConfig(
+        temperature=1,
+        top_p=0.95,
+        top_k=40,
+        max_output_tokens=8192,
+        response_mime_type="application/json",
+        response_schema=RecipeResponse,
+    )
+   ```
+
+   This will eliminate the messy JSON output parsing logic and will help make the code cleaner + much simpler/robust.
+
 
 ## Architecture
 

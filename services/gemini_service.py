@@ -2,7 +2,7 @@
 import base64
 import mimetypes
 import tempfile
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pydantic import BaseModel
 from google import genai
 from google.genai import types
@@ -36,6 +36,100 @@ def initialize_gemini(api_key: str):
         raise ValueError("API key is required")
 
     return genai.Client(api_key=api_key)
+
+
+def check_ingredient_availability(
+    recipe_ingredients: List[str], user_ingredients: List[str], api_key: str
+) -> Dict[str, List[str]]:
+    """Check which recipe ingredients the user has in their pantry using Gemini function calling.
+
+    Args:
+        recipe_ingredients: List of ingredients from the recipe
+        user_ingredients: List of ingredients saved by the user
+        api_key: Gemini API key
+
+    Returns:
+        Dictionary with 'available' and 'unavailable' lists of ingredients
+    """
+    try:
+        print(f"DEBUG - Checking ingredient availability with Gemini API key: {api_key}")
+        client = initialize_gemini(api_key)
+
+        # Define the function that Gemini will call
+        def categorize_ingredients(ingredients: List[str]) -> Dict[str, List[str]]:
+            """Categorizes recipe ingredients into available and unavailable based on user's pantry.
+
+            Args:
+                ingredients: List of recipe ingredients to categorize
+
+            Returns:
+                Dictionary with 'available' and 'unavailable' lists
+            """
+            available = []
+            unavailable = []
+
+            for ingredient in ingredients:
+                # Check if any user ingredient is part of this recipe ingredient
+                found = False
+                for user_ingredient in user_ingredients:
+                    # Simple string matching - can be improved for more complex matching
+                    if user_ingredient.lower() in ingredient.lower():
+                        available.append(ingredient)
+                        found = True
+                        break
+
+                if not found:
+                    unavailable.append(ingredient)
+
+            return {"available": available, "unavailable": unavailable}
+
+        # Use a simpler model for function calling
+        model = "gemini-2.0-flash-lite"
+
+        # Prepare the prompt
+        prompt = f"""
+        I have a recipe with these ingredients: {', '.join(recipe_ingredients)}
+        
+        I have these ingredients available in my pantry: {', '.join(user_ingredients)}
+        
+        Please categorize the recipe ingredients into 'available' and 'unavailable' based on what I have in my pantry.
+        """
+
+        # Configure function calling
+        generate_content_config = types.GenerateContentConfig(
+            tools=[categorize_ingredients],
+        )
+
+        # Generate the response with function calling
+        response = client.models.generate_content(
+            model=model,
+            contents=prompt,
+            config=generate_content_config,
+        )
+
+        # Check if there's a function call in the response
+        if (
+            response.candidates
+            and response.candidates[0].content
+            and response.candidates[0].content.parts
+            and hasattr(response.candidates[0].content.parts[0], "function_call")
+        ):
+
+            # Get the function call result
+            function_call = response.candidates[0].content.parts[0].function_call
+
+            # If the function is our categorize_ingredients function
+            if function_call and function_call.name == "categorize_ingredients":
+                # Extract and return the categorized ingredients
+                return categorize_ingredients(function_call.args.get("ingredients", recipe_ingredients))
+
+        # If no function call or something went wrong, categorize manually
+        return categorize_ingredients(recipe_ingredients)
+
+    except Exception as e:
+        print(f"DEBUG - Error checking ingredient availability: {e}")
+        # Fallback - attempt simple matching
+        return categorize_ingredients(recipe_ingredients)
 
 
 def generate_recipe(
