@@ -184,10 +184,13 @@ def show_ingredients_preferences():
     st.write("Add ingredients from your pantry that you'd like to use in your recipes.")
 
     # Add ingredients form
-    with st.form("add_ingredient_form"):
+    st.write("Add an ingredient:")
+    with st.form("add_ingredient_form", clear_on_submit=True):
         col1, col2 = st.columns([3, 1])
         with col1:
-            ingredient = st.text_input("Ingredient", placeholder="e.g., chicken, pasta, broccoli")
+            ingredient = st.text_input(
+                "Ingredient", placeholder="e.g., chicken, pasta, broccoli", label_visibility="collapsed"
+            )
         with col2:
             add_button = st.form_submit_button("Add")
 
