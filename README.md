@@ -4,10 +4,26 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
 ## Features
 
-- **Recipe Generation**: Generate detailed recipes with step-by-step instructions and images
-- **Recipe Collection**: Save and manage your favorite recipes
-- **Ingredients & Preferences**: Manage your ingredients and set your culinary preferences
-- **Settings**: Customize your experience with unit preferences and theme options
+### Implemented Features
+- [x] **Recipe Generation**: Generate detailed recipes with step-by-step instructions and images
+- [x] **Structured Output**: Uses Pydantic for structured recipe data modeling and validation
+- [x] **Interleaved Content**: Seamless integration of text instructions with corresponding images
+- [x] **Recipe Collection**: Save and manage your favorite recipes
+- [x] **Ingredients Management**: Add, remove, and clear ingredients to be used in recipes
+- [x] **Preference Settings**: Set culinary preferences and dietary restrictions
+- [x] **Customizable Units**: Toggle between metric and imperial measurement units
+- [x] **Streamlined UI**: Intuitive interface with responsive design and primary/secondary button hierarchy
+
+### Planned Features
+- [ ] **Pantry Awareness**: Highlight ingredients you already have in your pantry (green) versus those you need (red)
+- [ ] **Nutritional Analysis**: Calculate and display nutritional information for each recipe with visual charts
+- [ ] **Consumption Tracking**: Optional feature to track nutritional intake based on recipes you've made
+- [ ] **Dark/Light Theme**: Customizable appearance settings
+
+### Things to Fix
+
+- [ ] Use structured outputs with Pydantic native with Gemini
+- [ ] Make sure the old recipe refreshes when new recipe is being generated
 
 ## Architecture
 
@@ -18,9 +34,10 @@ recipe-generator/
 ├── app.py                  # Main application
 ├── requirements.txt        # Project dependencies
 ├── README.md               # Documentation
-│   └── settings.py               # App settings page
 ├── services/               # Service layer
 │   └── gemini_service.py   # Gemini API integration
+├── utils/                  # Utility functions
+│   └── display_functions.py # Display and rendering utilities
 └── prompts/                # System prompts
     └── recipe_prompts.py   # Recipe generation prompts
 ```

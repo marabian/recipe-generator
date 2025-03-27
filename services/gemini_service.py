@@ -57,7 +57,9 @@ def generate_recipe(
         complete_prompt += f"Please use {units} units for measurements.\n"
         complete_prompt += "Generate a detailed recipe with step-by-step instructions and images for each step."
 
-        print(f"DEBUG - Complete prompt: {complete_prompt[:200]}...")
+        # Print the full prompt for debugging
+        print("DEBUG - Complete prompt:")
+        print(complete_prompt)
 
         # Use the Gemini 2.0 Flash experimental model for image generation
         model = "gemini-2.0-flash-exp-image-generation"

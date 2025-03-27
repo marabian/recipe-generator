@@ -39,19 +39,19 @@ def show_recipe_generator():
         )
 
         # Create columns with better spacing for buttons
-        button_cols = st.columns([1, 3, 1, 1])
+        left_col, right_col = st.columns([1, 1])
 
-        with button_cols[0]:
+        with left_col:
             # Primary button for generating recipe
             generate_button = st.form_submit_button("Generate Recipe", type="primary")
 
-        # Column 1 is empty for spacing
-
-        with button_cols[2]:
-            clear_button = st.form_submit_button("Clear")
-
-        with button_cols[3]:
-            regenerate_button = st.form_submit_button("Regenerate")
+        with right_col:
+            # Container for right-aligned buttons
+            col1, col2, col3 = st.columns([1.9, 1, 1])
+            with col2:
+                clear_button = st.form_submit_button("Clear")
+            with col3:
+                regenerate_button = st.form_submit_button("Regenerate")
 
     # Check for API key
     if not st.session_state.api_key:
