@@ -17,9 +17,8 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
 ### Planned Features
 
-
-- [ ] **Nutritional Analysis**: Calculate and display nutritional information for each recipe with visual charts
-- [ ] **Consumption Tracking**: Optional feature to track nutritional intake based on recipes you've made
+- [ ] **Nutritional Analysis**: Calculate and display nutritional information for each recipe with visual charts using Gemini's code execution tool (and plot generation capabilities).
+- [ ] **Tracking Tab**: Optional tab to track nutritional intake based on recipes you've made.
 
 ### Notes & Potential Improvements
 
