@@ -7,7 +7,7 @@ A Streamlit web application that allows users to generate recipes based on ingre
 ### Implemented Features
 
 
-- [x] **Recipe Generation**: Generate detailed recipes with step-by-step instructions using interleaved text and images.
+- [x] **Recipe Generation**: Generate detailed recipes with step-by-step instructions using interleaved text and image output.
 - [x] **Recipe Collection**: Save and manage your favorite recipes
 - [x] **Ingredients Management**: Add, remove, and clear ingredients to be used in recipes
 - [x] **Preference Settings**: Set culinary preferences and dietary restrictions
