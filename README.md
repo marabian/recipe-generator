@@ -1,6 +1,6 @@
 # Streamlit Recipe Generator
 
-A Streamlit web application that allows users to generate recipes based on ingredients using Gemini's text and image generation capabilities.
+A Streamlit web application that allows users to generate recipes based on ingredients using Gemini's interleaved text and image generation capabilities.
 
 ## Features
 
@@ -22,7 +22,7 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
 ### Notes & Potential Improvements
 
-- **System instruction**: Currently, Developer/system instruction is not enabled for `models/gemini-2.0-flash-exp-image-generation`. When enabled, we can pass system instruction like this:
+- **System instruction**: Currently, developer/system instruction is not enabled for `models/gemini-2.0-flash-exp-image-generation`. When enabled, we can pass system instruction like this:
 
    ```python
    response = client.models.generate_content(
@@ -66,13 +66,6 @@ recipe-generator/
     └── recipe_prompts.py   # Recipe generation prompts
 ```
 
-### Technical Details
-
-- Multi-page Streamlit application
-- Gemini API integration for text and image generation
-- Local storage using Streamlit's session_state
-- Structured output processing with Pydantic
-- Light/dark theme support
 
 ## Setup and Usage
 
@@ -100,8 +93,8 @@ recipe-generator/
 
 ## Requirements
 
-- Python 3.8+
-- Streamlit 1.28.0+
+- Python 3.12.3
+- Streamlit 1.44.0
 - Gemini API access (API key)
 - Other dependencies as listed in requirements.txt
 
