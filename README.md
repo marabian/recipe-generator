@@ -4,7 +4,7 @@ A Streamlit web application that allows users to generate recipes based on ingre
 
 ## Live Demo
 
-<a href="https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/" target="_blank">https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/</a>
+[https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/](https://recipe-generator-nmfsbx4jzahscf2ixenxtv.streamlit.app/)
 
 ## Features
 
